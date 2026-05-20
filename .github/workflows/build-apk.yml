@@ -20,16 +20,31 @@ jobs:
 
       - name: Buat Cangkang Aplikasi
         run: |
-          # Inisialisasi project kosong dan install library pembungkus web
+          # Inisialisasi project dan install library
           npm init -y
           npm install @capacitor/cli @capacitor/core @capacitor/android
           
-          # Membuat file yang otomatis mengarahkan aplikasi ke Web GAS Anda
+          # Buat folder kosong sebagai syarat
           mkdir www
-          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=https://dikbudkra.github.io/verifnilaispmb" /></head><body style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;">Memuat Aplikasi SPMB...</body></html>' > www/index.html
+          echo 'Memuat...' > www/index.html
+          
+          # Inisialisasi Capacitor
+          npx cap init "Verif SPMB" id.go.karanganyar.spmb --web-dir www
+          
+          # Memasukkan link SPMB langsung ke konfigurasi inti aplikasi
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "id.go.karanganyar.spmb",
+            "appName": "Verif SPMB",
+            "webDir": "www",
+            "server": {
+              "url": "https://dikbudkra.github.io/verifnilaispmb",
+              "cleartext": true
+            }
+          }
+          EOF
           
           # Merakit struktur aplikasi Android
-          npx cap init "Verif SPMB" id.go.karanganyar.spmb --web-dir www
           npx cap add android
           npx cap sync android
 
